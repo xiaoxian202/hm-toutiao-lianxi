@@ -2,11 +2,12 @@
     <div class="container-login">
         <el-card>
             <img src="../../assets/logo_index.png" alt="">
-            <el-form>
-                <el-form-item >
+            <!-- status-icon:效验结果的反馈图标 -->
+            <el-form :model="loginForm" :rules="ruleForm" ref="loginForm" status-icon>
+                <el-form-item prop="mobile">
                     <el-input placeholder="请输入手机号" v-model="loginForm.mobile"></el-input>
                 </el-form-item>
-                <el-form-item >
+                <el-form-item prop="code">
                     <el-input style="width:240px;margin-right:8px" placeholder="请输入验证码" v-model="loginForm.code"></el-input>
                     <el-button>发送验证码</el-button>
                 </el-form-item>
@@ -15,7 +16,7 @@
                     <el-checkbox :value="true">我已阅读并同意用户协议和隐私条款</el-checkbox>
                 </el-form-item>
                 <el-form-item >
-                    <el-button style="width:100%" type="primary">登 录</el-button>
+                    <el-button style="width:100%" type="primary" @click="recode">登 录</el-button>
                 </el-form-item>
             </el-form>
         </el-card>
@@ -31,11 +32,56 @@
 export default {
     name:'page-login',
     data() {
+        // 自定义验证规则
+        const checkMobile = (rule,value,callback) => {
+            //第一位是1，第二位3-9，后面有9位数结尾
+            if(/^1[3-9]\d{9}$/.test(value)) {
+                callback()
+            }else {
+                callback(new Error('手机号不正确'))
+            }
+        }
         return {
+            //表单数据对象
            loginForm:{
                mobile:'',
                code:''
-           } 
+           },
+           //表单验证规格对象
+           ruleForm:{
+               mobile:[
+                   { required: true, message: '请填写手机号', trigger: 'blur' },
+                   //自定义验证规则
+                    {validator:checkMobile, trigger: 'blur'}
+               ],
+               code:[
+                   { required: true, message: '请填写验证码', trigger: 'blur' },
+                   { len:6, message: '请输入6位验证码', trigger: 'blur' }
+
+               ]
+           }
+        }
+    },
+    methods:{
+        recode() {
+            this.$refs.loginForm.validate((valid) => {
+                if (valid) {
+                    //登录
+                    this.$http.post('http://ttapi.research.itcast.cn/mp/v1_0/authorizations',this.loginForm)
+                    .then((res) => {
+                        //登陆成功，跳转路由
+                        console.log(res.data);
+                        this.$router.push({
+                            path:'/'
+                        })
+                    })
+                    .catch((err) => {
+                        //登陆失败，提示
+                        console.log(err);
+                        this.$message.error('手机号或验证码错误');
+                    })
+                }
+            })
         }
     }
 }

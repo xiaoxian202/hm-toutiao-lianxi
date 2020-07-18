@@ -10,6 +10,11 @@ Vue.use(ElementUI)
 //导入自己的路由模块
 import router from '@/router'
 
+//导入axios
+import Axios from 'axios'
+//挂载全局
+Vue.prototype.$http = Axios
+
 Vue.config.productionTip = false
 
 new Vue({
