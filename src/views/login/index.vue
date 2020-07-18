@@ -25,6 +25,9 @@
 </template>
 
 <script>
+// 导入本地用户信息相关函数
+import auth from '@/utils/auth.js'
+
 // vue配置对象中的name属性:
 // 当你的组件时路由级别组件的时候，默认的组件名称 文件的名称，
 // 目前组件的名称不够语义化，所以给组件设置一个name属性，
@@ -69,8 +72,11 @@ export default {
                     //登录
                     this.$http.post('http://ttapi.research.itcast.cn/mp/v1_0/authorizations',this.loginForm)
                     .then((res) => {
+                        // 成功，保存用户信息
+                        // res.data是全部信息
+                        auth.setUser(res.data.data)
                         //登陆成功，跳转路由
-                        console.log(res.data);
+                        // console.log(res.data);
                         this.$router.push({
                             path:'/'
                         })
