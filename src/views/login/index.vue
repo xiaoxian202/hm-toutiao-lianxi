@@ -67,25 +67,37 @@ export default {
     },
     methods:{
         recode() {
-            this.$refs.loginForm.validate((valid) => {
+            this.$refs.loginForm.validate(async (valid) => {
                 if (valid) {
-                    //登录
-                    this.$http.post('http://ttapi.research.itcast.cn/mp/v1_0/authorizations',this.loginForm)
-                    .then((res) => {
-                        // 成功，保存用户信息
-                        // res.data是全部信息
+                    // //登录
+                    // this.$http.post('authorizations',this.loginForm)
+                    // .then((res) => {
+                    //     // 成功，保存用户信息
+                    //     // res.data是全部信息
+                    //     auth.setUser(res.data.data)
+                    //     //登陆成功，跳转路由
+                    //     // console.log(res.data);
+                    //     this.$router.push({
+                    //         path:'/'
+                    //     })
+                    // })
+                    // .catch((err) => {
+                    //     //登陆失败，提示
+                    //     console.log(err);
+                    //     this.$message.error('手机号或验证码错误');
+                    // })
+                    // ----------------------------------------------
+
+                    // async和await使用
+                    // 使用 try{  可能报错的代码片段  }catch(e){  对异常进行处理代码  } 异常捕获和异常处理
+                    try {
+                        // 考虑异常
+                        const res = await this.$http.post('authorizations',this.loginForm)
                         auth.setUser(res.data.data)
-                        //登陆成功，跳转路由
-                        // console.log(res.data);
-                        this.$router.push({
-                            path:'/'
-                        })
-                    })
-                    .catch((err) => {
-                        //登陆失败，提示
-                        console.log(err);
+                        this.$router.puth('/')
+                    } catch (error) {
                         this.$message.error('手机号或验证码错误');
-                    })
+                    }
                 }
             })
         }
