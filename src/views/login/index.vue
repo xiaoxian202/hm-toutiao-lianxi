@@ -94,7 +94,7 @@ export default {
                         // 考虑异常
                         const res = await this.$http.post('authorizations',this.loginForm)
                         auth.setUser(res.data.data)
-                        this.$router.puth('/')
+                        this.$router.push('/')
                     } catch (error) {
                         this.$message.error('手机号或验证码错误');
                     }

@@ -4,11 +4,26 @@ import Axios from 'axios'
 import auth from '@/utils/auth.js'
 // 导入router实例
 import router from '@/router'
+// 导入json-bigint
+import JSONbigint from 'json-bigint'
 
-// 配置基准地址
+//1. 配置基准地址
 Axios.defaults.baseURL = 'http://ttapi.research.itcast.cn/mp/v1_0/'
-// 配置请求头 -> 有问题，刷新页面才会重新执行，不刷新不执行
+//2. 配置请求头 -> 有问题，刷新页面才会重新执行，不刷新不执行
 // Axios.defaults.headers.Authorization = `Bearer ${auth.getUser().token}`
+
+//3.把axios默认的json转换方式，改成json-bigint来进行转换
+// 通过axios的配置，修改默认的转换方式
+// `transformResponse` 在传递给 then/catch 前，允许修改响应数据
+// 再删除的时候会报错，删除时没有响应data===null
+Axios.defaults.transformResponse = [function(data) {
+    try {
+        return JSONbigint.parse(data)
+    } catch (error) {
+        // 转换不成功时后台给什么数据，就返回什么数据
+        return data
+    }
+}]
 
 // 请求拦截器
 Axios.interceptors.request.use((config) => {
