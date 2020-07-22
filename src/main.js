@@ -20,6 +20,9 @@ import Myplugin from '@/plugin.js'
 // 注册
 Vue.use(Myplugin)
 
+// 上传组件样式
+import '@/styles/index.less'
+
 Vue.config.productionTip = false
 
 new Vue({

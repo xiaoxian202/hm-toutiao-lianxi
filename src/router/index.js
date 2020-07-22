@@ -12,6 +12,10 @@ import Login from '@/views/login'
 import Layout from '@/views/layout'
 //首页下欢迎页
 import Welcome from '@/views/Welcome'
+// 素材管理
+import Image from '@/views/image'
+// 发布文章
+import Publish from '@/views/publish'
 // 404
 import NoFound from '@/views/404'
 // 内容管理
@@ -34,7 +38,9 @@ const routes = [
             {
                 path:'/article',
                 component:Article
-            }
+            },
+            {path:'/image',component:Image},
+            {path:'/publish',component:Publish}
         ]
     },
     // 放到最后面
