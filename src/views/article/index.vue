@@ -21,17 +21,10 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="频道">
-          <!-- select选择器 
-          clearable:是否清空选项
-          -->
-          <el-select @change="changeChannel" clearable v-model="reqParams.channel_id" placeholder="请选择">
-            <el-option
-              v-for="item in channelOptions"
-              :key="item.id"
-              :label="item.name"
-              :value="item.id">
-            </el-option>           
-          </el-select>
+          <!-- 使用插件 -->
+          <!--  :value=" reqParams.channel_id" @input="reqParams.channel_id=$event"
+          是v-model的语法糖 -->
+          <my-channel v-model="reqParams.channel_id"></my-channel>
         </el-form-item>
         <el-form-item label="日期">
           <el-date-picker
@@ -154,16 +147,10 @@ export default {
     },
     // 初始化获取数据
     created() {
-      this.getChannels()
+      // this.getChannels()
       this.getArticle()
     },
     methods:{
-      // 获取频道文章
-      async getChannels() {
-        const res = await this.$http.get('channels')
-        // console.log(res.data);
-        this.channelOptions = res.data.data.channels
-      },
       // 获取文章
       async getArticle() {
         const res = await this.$http.get('articles',{params:this.reqParams})
@@ -177,11 +164,6 @@ export default {
         this.reqParams.page = newPage
         // 刷新列表
         this.getArticle()
-      },
-      // 频道清空，改变值时触发
-      // 参数为：目前的选中值
-      changeChannel(val) {
-        if(val === '') this.reqParams.channel_id = null
       },
       // 日期选择器，用户确认选定的值时触发
       changeDate(arr) {
