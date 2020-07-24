@@ -2,7 +2,8 @@
   <div class="my-image">
       <!-- 图片按钮 -->
       <div class="btn-img" @click="openDialog">
-          <img src="../assets/default.png" alt="">
+          <!-- 如果有接到的值就用接到的图片，如果没有就显示默认图片 -->
+          <img :src="value || previewImg" alt="">
       </div>
       <!-- 对话框 -->
       <el-dialog :visible.sync="dialogVisible" width="720px">
@@ -23,12 +24,12 @@
                 </div>
                 <!-- 分页 -->
                 <el-pagination
-                background
-                layout="prev, pager, next"
-                :total="total"
-                :page-size="reqParams.per_page"
-                :current-page="reqParams.page"
-                @current-change="changePager">
+                    background
+                    layout="prev, pager, next"
+                    :total="total"
+                    :page-size="reqParams.per_page"
+                    :current-page="reqParams.page"
+                    @current-change="changePager">
                 </el-pagination>
             </el-tab-pane>
             <el-tab-pane label="上传图片" name="upload">
@@ -47,7 +48,7 @@
         </el-tabs>
         <span slot="footer" class="dialog-footer">
             <el-button @click="dialogVisible = false">取 消</el-button>
-            <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+            <el-button type="primary" @click="confirmImg">确 定</el-button>
         </span>
       </el-dialog>
   </div>
@@ -56,8 +57,13 @@
 <script>
 // 导入auth
 import auth from '@/utils/auth.js'
+// 导入图片预览图
+// 动态绑定的src对应的数据字段的图片，没有打包到预览服务器，所以无法预览
+import img from '../assets/default.png'
 export default {
     name:'my-image',
+    // 接值
+    props:['value'],
     data() {
         return {
             dialogVisible:false,
@@ -79,7 +85,9 @@ export default {
             // 当前上传的图片地址
             uploadImgUrl:null,
             // 请求头
-            headers:{Authorization:`Bearer ${auth.getUser().token}`}
+            headers:{Authorization:`Bearer ${auth.getUser().token}`},
+            // 图片预览图
+            previewImg:img
         }
     },
     methods:{
@@ -87,6 +95,10 @@ export default {
         openDialog() {
             this.dialogVisible = true
             this.getImages()
+            // 清除对话框中内容
+            this.selectedImgUrl = null
+            this.uploadImgUrl = null
+            this.activeName = "images"
         },
         // 获取图片素材
         async getImages() {
@@ -114,6 +126,30 @@ export default {
         // 上传成功的回调函数
         uploadSuccess(response) {
             this.uploadImgUrl = response.data.url
+        },
+        // 点击确定按钮
+        confirmImg() {
+            // 点击的是素材库
+            if(this.activeName === "images"){
+                // 判断当前是否有选中一张图片，没有提示
+                if(!this.selectedImgUrl) return this.$message.warning('请选中一张图片')
+                // 预览
+                // this.previewImg = this.selectedImgUrl
+                // 把选中图片传到给父组件使用
+                this.$emit('input',this.selectedImgUrl)
+            }else {
+                // 点击上传图片
+                // 判断当前是否有上传一张图片，没有提示
+                if(!this. uploadImgUrl) return this.$message.warning('请上传一张图片')
+                // 预览
+                // this.previewImg = this. uploadImgUrl
+                // 把上传图片传到给父组件使用
+                this.$emit('input',this. uploadImgUrl)
+            }
+            // 关闭对话框
+            this.dialogVisible = false
+            // 触发自定义事件，进行封面校验
+            this.$emit('confirm')
         }
     }
 }

@@ -186,7 +186,7 @@ export default {
       btnEdit(id) {
         // 跳转
         this.$router.push({
-          path:`/publish/${id}`,
+          path:`/publish`,
           query:{
             id
           }
