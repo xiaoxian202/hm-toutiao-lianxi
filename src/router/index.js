@@ -16,6 +16,12 @@ import Welcome from '@/views/Welcome'
 import Image from '@/views/image'
 // 发布文章
 import Publish from '@/views/publish'
+// 评论管理
+import Comment from '@/views/comment'
+// 粉丝管理
+import Fans from '@/views/fans'
+// 个人设置
+import Setting from '@/views/setting'
 // 404
 import NoFound from '@/views/404'
 // 内容管理
@@ -23,24 +29,36 @@ import Article from '@/views/article'
 
 //初始化路由
 const routes = [
+    // 登录
     {
         path:'/login',
         component:Login
     },
+    // 首页
     {
         path:'/',
         component:Layout,
         children:[
+            // 欢迎页
             {
                 path:'/',
                 component:Welcome
             },
+            // 内容管理
             {
                 path:'/article',
                 component:Article
             },
+            // 素材管理
             {path:'/image',component:Image},
-            {path:'/publish',component:Publish}
+            // 发布文章
+            {path:'/publish',component:Publish},
+            // 评论管理
+            {path:'/comment',component:Comment},
+            // 粉丝管理
+            {path:'/fans',component:Fans},
+            // 个人设置
+            {path:'/setting',component:Setting},
         ]
     },
     // 放到最后面

@@ -53,6 +53,9 @@
                 </el-form-item>
             </el-form>
       </el-card>
+      <!-- 练习sync 
+      :msg="testMsg" @update:msg="testMsg=$event"是:msg.sync="testMsg"语法糖写法-->
+      <!-- <my-prop-sync :msg.sync="testMsg"></my-prop-sync> -->
   </div>
 </template>
 
@@ -63,10 +66,13 @@ import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.bubble.css'
 
 import { quillEditor } from 'vue-quill-editor'
+
+// 导入练习sync组件
+// import MyPropSync from '@/components/my-prop-sync'
 export default {
     name:'page-publish',
-    // 注册组件
-    components: {quillEditor},
+    // 注册组件 注册MyPropSync
+    components: {quillEditor/*,MyPropSync*/},
     data() {
         // 封面自定义校验
         const validCoverFn = (rule,value,callback) => {
@@ -94,6 +100,8 @@ export default {
         return {
             // 测试封面图片地址
             // testURL:null,
+            // 测试sync
+            testMsg:'sync',
             // 表单数据对象
             articleForm:{
                 title:null,
