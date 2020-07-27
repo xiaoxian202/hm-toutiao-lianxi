@@ -7,26 +7,25 @@ Vue.use(VueRouter)
 import auth from '@/utils/auth.js'
 
 //导入登录组件
-import Login from '@/views/login'
+const Login = () => import ('@/views/login') 
 //首页
-import Layout from '@/views/layout'
+const Layout = () => import ('@/views/layout') 
 //首页下欢迎页
-import Welcome from '@/views/Welcome'
+const Welcome = () => import ('@/views/Welcome')
 // 素材管理
-import Image from '@/views/image'
+const Image = () => import ('@/views/image') 
 // 发布文章
-import Publish from '@/views/publish'
+const Publish = () => import ('@/views/publish') 
 // 评论管理
-import Comment from '@/views/comment'
-// 粉丝管理
-import Fans from '@/views/fans'
+const Comment = () => import ('@/views/comment') 
+// 粉丝管理 命名
+const Fans = () => import (/* webpackChunkName: "fans" */ '@/views/fans') 
 // 个人设置
-import Setting from '@/views/setting'
+const Setting = () => import ('@/views/setting')
 // 404
-import NoFound from '@/views/404'
+const NoFound = () => import ('@/views/404') 
 // 内容管理
-import Article from '@/views/article'
-
+const Article = () => import ('@/views/article')
 //初始化路由
 const routes = [
     // 登录
