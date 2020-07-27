@@ -84,6 +84,8 @@
 <script>
 // 导入用户信息相关函数
 import auth from '@/utils/auth'
+// 导入eventBus
+import eventBus from '@/eventBus.js'
 export default {
     name:'layout',
     data() {
@@ -99,6 +101,14 @@ export default {
     created() {
         const {name,photo} = auth.getUser()
         this.user = {name,photo}
+        // 保存设置 名字
+        eventBus.$on('saveName',data => {
+            this.user.name = data
+        })
+        // 接值 头像
+        eventBus.$on('updateAvatar',data => {
+            this.user.photo = data
+        })
     },
     methods:{
         setting() {

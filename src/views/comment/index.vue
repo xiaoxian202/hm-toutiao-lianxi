@@ -6,7 +6,7 @@
             </div>
             <!-- 表格 -->
             <el-table :data="comments">
-                <el-table-column label="文章标题" prop="title"></el-table-column>
+                <el-table-column label="文章标题" prop="title" width="400px"></el-table-column>
                 <el-table-column label="总评论数" prop="total_comment_count"></el-table-column>
                 <el-table-column label="粉丝评论数" prop="fans_comment_count"></el-table-column>
                 <el-table-column label="状态">
@@ -14,7 +14,7 @@
                         {{scope.row.comment_status ? '已打开' : '已关闭'}}
                     </template>
                 </el-table-column>
-                <el-table-column label="操作">
+                <el-table-column label="操作" width="100px">
                     <template slot-scope="scope">
                         <el-button @click="saveComment(scope.row)" v-if="scope.row.comment_status" type="danger" size="small">关闭评论</el-button>
                         <el-button @click="saveComment(scope.row)" v-else type="success" size="small">打开评论</el-button>
@@ -24,11 +24,13 @@
             <!-- 分页 -->
             <el-pagination
                 background
-                layout="prev, pager, next"
+                layout="prev, pager, next,sizes"
                 :total="total"
+                :page-sizes=[10,20,30,40,50]
                 :page-size="reqParams.per_page"
                 :current-page="reqParams.page"
-                @current-change="changePage">
+                @current-change="changePage"
+                @size-change="changeSize">
             </el-pagination>
         </el-card>
     </div>
@@ -67,6 +69,12 @@ export default {
             this.reqParams.page = newPage
             this.getComment()
         },
+        // 改变每页个数
+        changeSize(newSize) {
+            this.reqParams.page = 1
+            this.reqParams.per_page = newSize
+            this.getComment()
+        },
         // 打开/关闭评论
         saveComment(row) {
             const text1 = '此操作会关闭该文章的评论功能，关闭后用户将无法对该文章进行评论，您确认吗？'
@@ -88,12 +96,13 @@ export default {
                     // 综合写法axios({})
                     await this.$http({
                         method:'put',
-                        url:"comment/status",
+                        url:'comments/status',
                         // ?后键值对参数
                         params:{
-                            // json-bigint超出了最大安全范围变成了对象，可以转成字符串
+                            // row.id超出最大安全值，json-bigint转化成了对象,转成字符传
                             article_id:row.id.toString()
                         },
+                        // 请求体传参
                         data:{
                             allow_comment:!row.comment_status
                         }
